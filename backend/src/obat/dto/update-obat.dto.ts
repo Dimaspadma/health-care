@@ -1,4 +1,5 @@
 import { IsInt, IsOptional, IsString } from 'class-validator';
+import { Role } from 'src/roles/role.enum';
 
 // Export class for update
 export class UpdateObatDto {
@@ -17,4 +18,6 @@ export class UpdateObatDto {
   @IsOptional()
   @IsInt()
   stok: number;
+
+  roles: Role[];
 }

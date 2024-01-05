@@ -1,4 +1,5 @@
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { Role } from 'src/roles/role.enum';
 
 // Export class
 export class CreateObatDto {
@@ -16,4 +17,6 @@ export class CreateObatDto {
 
   @IsInt()
   stok: number;
+
+  roles: Role[];
 }

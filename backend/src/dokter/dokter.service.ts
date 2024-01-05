@@ -21,6 +21,13 @@ export class DokterService {
     });
   }
 
+  findAll(): Promise<Dokter[]> {
+    return this.dokterRepository
+    .createQueryBuilder('dokter')
+    .select(['dokter.id', 'dokter.nama', 'dokter.alamat', 'dokter.no_hp', 'dokter.nip'])
+    .getMany();
+  }
+
   async register(registerDokterDto: RegisterDokterDto) {
     // Check if dokter already exists by no_ktp
     const dokter = await this.dokterRepository.findOneBy({
@@ -56,10 +63,18 @@ export class DokterService {
       if (match) {
         const payload = { sub: dokter.id, name: dokter.nama, role: 'dokter' };
         return {
+          id: dokter.id,
+          nama: dokter.nama,
           access_token: await this.jwtService.signAsync(payload),
         };
       }
     }
     return null;
+  }
+
+  findOneById(id: number): Promise<Dokter> {
+    return this.dokterRepository.findOneBy({
+      id: id,
+    });
   }
 }

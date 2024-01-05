@@ -1,23 +1,21 @@
 import { Module } from '@nestjs/common';
-import { DokterController } from './dokter.controller';
-import { DokterService } from './dokter.service';
+import { AdminService } from './admin.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Dokter } from 'src/typeorm/dokter.entity';
+import { Admin } from 'src/typeorm/admin.entity';
+import { AdminController } from './admin.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([Dokter]),
+    TypeOrmModule.forFeature([Admin]),
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '60s' },
-    }),
-  ],
-  controllers: [DokterController],
-  providers: [DokterService],
-  exports: [DokterService],
+    }),],
+  controllers: [AdminController],
+  providers: [AdminService],
 })
-export class DokterModule {}
+export class AdminModule {}

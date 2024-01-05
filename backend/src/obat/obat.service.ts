@@ -19,7 +19,15 @@ export class ObatService {
     return this.obatRepository.find();
   }
 
+  findOne(id: number): Promise<Obat> {
+    return this.obatRepository.findOneBy({ id });
+  }
+
   update(id: string, updateObatDto: CreateObatDto) {
     return this.obatRepository.update(id, updateObatDto);
+  }
+
+  remove(id: string) {
+    return this.obatRepository.delete(id);
   }
 }

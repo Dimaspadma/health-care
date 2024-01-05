@@ -12,6 +12,14 @@ export class PasienService {
     private readonly pasienRepository: Repository<Pasien>,
   ) {}
 
+  async findAll() {
+    return this.pasienRepository.find();
+  }
+
+  async findOne(idPasien: number) {
+    return this.pasienRepository.findOneBy({ id: idPasien });
+  }
+
   async register(registerPasienDto: RegisterPasienDto) {
     // Check if pasien already exists by no_ktp
     const pasien = await this.pasienRepository.findOneBy({
@@ -32,7 +40,7 @@ export class PasienService {
       .toString()
       .padStart(2, '0')}`;
 
-    registerPasienDto.no_rm = `${dateNow}-${(countPasien + 1)
+    registerPasienDto.no_rm = `${dateNow}_${(countPasien + 1)
       .toString()
       .padStart(3, '0')}`;
 

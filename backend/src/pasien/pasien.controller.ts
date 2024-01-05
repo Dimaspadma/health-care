@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Post,
@@ -12,6 +13,11 @@ import { RegisterPasienDto } from './dto/register-pasien.dto';
 @Controller('pasien')
 export class PasienController {
   constructor(private readonly pasienService: PasienService) {}
+
+  @Get()
+  async findAll() {
+    return this.pasienService.findAll();
+  }
 
   @Post('register')
   async register(@Body() registerPasienDto: RegisterPasienDto) {
