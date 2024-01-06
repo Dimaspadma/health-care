@@ -13,11 +13,11 @@ export class PasienService {
   ) {}
 
   async findAll() {
-    return this.pasienRepository.find();
+    return await this.pasienRepository.find();
   }
 
   async findOne(idPasien: number) {
-    return this.pasienRepository.findOneBy({ id: idPasien });
+    return await this.pasienRepository.findOneBy({ id: idPasien });
   }
 
   async register(registerPasienDto: RegisterPasienDto) {

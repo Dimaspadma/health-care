@@ -7,11 +7,9 @@ export class CreateJadwalPeriksaDto {
   hari: string;
 
   @IsNotEmpty()
-  @IsMilitaryTime()
   jam_mulai: Date;
 
   @IsNotEmpty()
-  @IsMilitaryTime()
   jam_selesai: Date;
 
   @IsNotEmpty()

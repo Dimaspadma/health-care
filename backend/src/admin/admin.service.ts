@@ -35,7 +35,7 @@ export class AdminService {
   }
 
   // login admin by nama and password
-  async login(registerAdminDto: RegisterAdminDto) {
+  async login(registerAdminDto: RegisterAdminDto): Promise<any> {
     // Compare hash password
     const admin = await this.adminRepository.findOneBy({
       username: ILike(registerAdminDto.username),

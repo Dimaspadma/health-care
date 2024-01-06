@@ -10,7 +10,7 @@ export class ObatService {
     @InjectRepository(Obat) private readonly obatRepository: Repository<Obat>,
   ) {}
 
-  create(createObatDto: CreateObatDto) {
+  create(createObatDto: CreateObatDto): Promise<Obat> {
     const newObat = this.obatRepository.create(createObatDto);
     return this.obatRepository.save(newObat);
   }
@@ -23,11 +23,11 @@ export class ObatService {
     return this.obatRepository.findOneBy({ id });
   }
 
-  update(id: string, updateObatDto: CreateObatDto) {
-    return this.obatRepository.update(id, updateObatDto);
+  async update(id: string, updateObatDto: CreateObatDto) {
+    return await this.obatRepository.update(id, updateObatDto);
   }
 
-  remove(id: string) {
-    return this.obatRepository.delete(id);
+  async remove(id: string) {
+    return await this.obatRepository.delete(id);
   }
 }

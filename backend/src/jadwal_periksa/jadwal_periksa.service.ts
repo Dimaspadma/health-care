@@ -15,7 +15,7 @@ export class JadwalPeriksaService {
   ) {}
 
   async findAll(): Promise<JadwalPeriksa[]> {
-    return this.jadwalPeriksaRepository.find({
+    return await this.jadwalPeriksaRepository.find({
       relations: {
         dokter: true,
         poli: true,
@@ -34,7 +34,18 @@ export class JadwalPeriksaService {
   }
 
   async findOne(id: number): Promise<JadwalPeriksa> {
-    return this.jadwalPeriksaRepository.findOneBy({ id });
+    return this.jadwalPeriksaRepository.createQueryBuilder('jadwal_periksa')
+      .leftJoinAndSelect('jadwal_periksa.poli', 'poli')
+      .leftJoinAndSelect('jadwal_periksa.dokter', 'dokter')
+      .where('jadwal_periksa.id = :id', {id})
+      .select([
+        'jadwal_periksa',
+        'poli.id',
+        'poli.nama_poli',
+        'dokter.id',
+        'dokter.nama',
+      ])
+      .getOne();
   }
 
   async findByPoliId(poliId: number): Promise<JadwalPeriksa[]> {
@@ -62,7 +73,7 @@ export class JadwalPeriksaService {
   }
 
   async findByDokterId(dokterId: number): Promise<JadwalPeriksa[]> {
-    return this.jadwalPeriksaRepository.find({
+    return await this.jadwalPeriksaRepository.find({
       relations: {
         dokter: true,
         poli: true,
@@ -90,32 +101,66 @@ export class JadwalPeriksaService {
     // Check if poli exists
     const id_poli = Number(createJadwalPeriksaDto.id_poli);
     if (isNaN(id_poli)) {
-      throw new HttpException('Poli not found', HttpStatus.NOT_FOUND);
+      throw new HttpException({mesage:'Poli not found', error:'Bad Request', statusCode: 401}, HttpStatus.BAD_REQUEST);
     }
     const poli = await this.poliService.findOne(id_poli);
     if (!poli) {
-      throw new HttpException('Poli not found', HttpStatus.NOT_FOUND);
+      throw new HttpException({mesage:'Poli not found', error:'Bad Request', statusCode: 401}, HttpStatus.BAD_REQUEST);
     }
 
     // Check if dokter exists
     const id_dokter = Number(createJadwalPeriksaDto.id_dokter);
     if (isNaN(id_dokter)) {
-      throw new HttpException('Dokter not found', HttpStatus.NOT_FOUND);
+      throw new HttpException({mesage:'Dokter not found', error:'Bad Request', statusCode: 401}, HttpStatus.BAD_REQUEST);
     }
     const dokter = await this.dokterService.findOneById(id_dokter);
     if (!dokter) {
-      throw new HttpException('Dokter not found', HttpStatus.NOT_FOUND);
+      throw new HttpException({mesage:'Dokter not found', error:'Bad Request', statusCode: 401}, HttpStatus.BAD_REQUEST);
     }
 
     const newJadwalPeriksa = this.jadwalPeriksaRepository.create(createJadwalPeriksaDto);
-    return this.jadwalPeriksaRepository.save(newJadwalPeriksa);
+    return {message: 'jadwal berhasil ditambah', data: await this.jadwalPeriksaRepository.save(newJadwalPeriksa)};
   }
 
   async countById(id: number): Promise<number> {
-    return this.jadwalPeriksaRepository.count({
+    return await this.jadwalPeriksaRepository.count({
       where: {
         id,
       },
     });
   }
+
+  async update(id: number, createJadwalPeriksaDto: CreateJadwalPeriksaDto) {
+    const jadwalPeriksa = await this.jadwalPeriksaRepository.findOneBy({id});
+    if (!jadwalPeriksa) {
+      throw new HttpException({message: 'Jadwal Periksa not found', error: 'Not Found', statusCode: 404}, HttpStatus.NOT_FOUND);
+    }
+
+    // Check if poli exists
+    const id_poli = Number(createJadwalPeriksaDto.id_poli);
+    if (isNaN(id_poli)) {
+      throw new HttpException({mesage:'Poli not found', error:'Bad Request', statusCode: 401}, HttpStatus.BAD_REQUEST);
+    }
+    const poli = await this.poliService.findOne(id_poli);
+    if (!poli) {
+      throw new HttpException({mesage:'Poli not found', error:'Bad Request', statusCode: 401}, HttpStatus.BAD_REQUEST);
+    }
+
+    // Check if dokter exists
+    const id_dokter = Number(createJadwalPeriksaDto.id_dokter);
+    if (isNaN(id_dokter)) {
+      throw new HttpException({mesage:'Dokter not found', error:'Bad Request', statusCode: 401}, HttpStatus.BAD_REQUEST);
+    }
+    const dokter = await this.dokterService.findOneById(id_dokter);
+    if (!dokter) {
+      throw new HttpException({mesage:'Dokter not found', error:'Bad Request', statusCode: 401}, HttpStatus.BAD_REQUEST);
+    }
+
+    const result = await this.jadwalPeriksaRepository.update(id, createJadwalPeriksaDto);
+    if (result.affected === 0) {
+      throw new HttpException({message: 'Jadwal Periksa not found', error: 'Not Found', statusCode: 404}, HttpStatus.NOT_FOUND);
+    }
+    return this.jadwalPeriksaRepository.findOneBy({id});
+  }
+
 }

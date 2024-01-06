@@ -16,7 +16,7 @@ export class DokterController {
 
   @Get()
   async findAll() {
-    return this.dokterService.findAll();
+    return {message: 'success', data: await this.dokterService.findAll()};
   }
 
   @Post('register')
@@ -32,8 +32,8 @@ export class DokterController {
   async login(@Body() loginDokterDto: LoginDokterDto) {
     const dokter = await this.dokterService.login(loginDokterDto);
     if (dokter) {
-      return dokter;
+      return {message: 'berhasil login', data: dokter};
     }
-    throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    throw new HttpException({message: 'Login tidak berhasil', error: 'Unauthorized', statusCode: 401}, HttpStatus.UNAUTHORIZED);
   }
 }

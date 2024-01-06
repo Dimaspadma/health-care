@@ -8,7 +8,7 @@ export class PoliController {
   ) {}
 
   @Get()
-  async findAll(): Promise<any[]> {
-    return this.poliService.findAll();
+  async findAll() {
+    return {message: 'success', data: await this.poliService.findAll()};
   }
 }

@@ -18,6 +18,8 @@ import { Admin } from './typeorm/admin.entity';
 import { PeriksaModule } from './periksa/periksa.module';
 import { Periksa } from './typeorm/periksa.entity';
 import { MembeliModule } from './membeli/membeli.module';
+import { DetailPeriksa } from './typeorm/detail_periksa.entity';
+import { Membeli } from './typeorm/membeli.entity';
 
 @Module({
   imports: [
@@ -31,7 +33,7 @@ import { MembeliModule } from './membeli/membeli.module';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASS'),
         database: configService.get<string>('DB_NAME'),
-        entities: [Obat, Pasien, Dokter, JadwalPeriksa, Poli, Admin, Periksa],
+        entities: [Obat, Pasien, Dokter, JadwalPeriksa, Poli, Admin, Periksa, DetailPeriksa, Membeli],
         synchronize: true,
       }),
       inject: [ConfigService],
