@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put } from '@nestjs/common';
 import { JadwalPeriksaService } from './jadwal_periksa.service';
 import { CreateJadwalPeriksaDto } from './dto/create-jadwal_periksa.dto';
 
@@ -26,15 +26,15 @@ export class JadwalPeriksaController {
   }
 
   @Get('poli/:poliId')
-  async findByPoliId(@Param('poliId') poliId: string): Promise<any[]> {
+  async findByPoliId(@Param('poliId') poliId: string){
     let id: number;
 
     id = Number(poliId);
     if (isNaN(id)) {
-      return [];
+      return {message: 'success', data: []};
     }
 
-    return this.jadwalPeriksaService.findByPoliId(id);
+    return {message: 'success', data: await this.jadwalPeriksaService.findByPoliId(id)};
   }
 
   @Get('dokter/:dokterId')
@@ -50,6 +50,8 @@ export class JadwalPeriksaController {
 
   @Post()
   async create(@Body() createJadwalPeriksaDto: CreateJadwalPeriksaDto) {
+
+    //response has been defined  in service
     return await this.jadwalPeriksaService.create(createJadwalPeriksaDto);
   }
 
@@ -64,4 +66,17 @@ export class JadwalPeriksaController {
 
     return {message: 'update berhasil', data: await this.jadwalPeriksaService.update(jadwalPeriksaId, createJadwalPeriksaDto)};
   }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    let jadwalPeriksaId: number;
+
+    jadwalPeriksaId = Number(id);
+    if (isNaN(jadwalPeriksaId)) {
+      throw new HttpException({message: 'Jadwal Periksa not found', error: 'Not Found', statusCode: 404}, HttpStatus.NOT_FOUND);
+    }
+
+    return {message: 'delete berhasil', data: await this.jadwalPeriksaService.delete(jadwalPeriksaId)};
+  }
+
 }

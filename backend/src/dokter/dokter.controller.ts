@@ -23,9 +23,9 @@ export class DokterController {
   async register(@Body() registerDokterDto: RegisterDokterDto) {
     const dokter = await this.dokterService.register(registerDokterDto);
     if (dokter) {
-      return 'Dokter berhasil ditambahkan';
+      return {message: 'berhasil register', data: {id: dokter.id, nama: dokter.nama}};
     }
-    throw new HttpException('Dokter already exists', HttpStatus.BAD_REQUEST);
+    throw new HttpException({message: 'Dokter already exists', error: 'Bad Request', statusCode: 400}, HttpStatus.BAD_REQUEST);
   }
 
   @Post('login')

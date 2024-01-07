@@ -19,6 +19,7 @@ export class JadwalPeriksaService {
       relations: {
         dokter: true,
         poli: true,
+        periksa: true,
       },
       select : {
         dokter: {
@@ -28,6 +29,9 @@ export class JadwalPeriksaService {
         poli: {
           id: true,
           nama_poli: true,
+        },
+        periksa: {
+          id: true,
         },
       },  
     });
@@ -161,6 +165,23 @@ export class JadwalPeriksaService {
       throw new HttpException({message: 'Jadwal Periksa not found', error: 'Not Found', statusCode: 404}, HttpStatus.NOT_FOUND);
     }
     return this.jadwalPeriksaRepository.findOneBy({id});
+  }
+
+  async delete(id: number) {
+    const jadwalPeriksa = await this.jadwalPeriksaRepository.findOneBy({id});
+    if (!jadwalPeriksa) {
+      throw new HttpException({message: 'Jadwal Periksa not found', error: 'Not Found', statusCode: 404}, HttpStatus.NOT_FOUND);
+    }
+    try{
+      const result = await this.jadwalPeriksaRepository.delete(id);
+
+      if (result.affected === 0) {
+        throw new HttpException({message: 'Jadwal Periksa not found', error: 'Not Found', statusCode: 404}, HttpStatus.NOT_FOUND);
+      }
+    }catch(e){
+      throw new HttpException({message: 'Jadwal tidak bisa dihapus', error: 'Unauthorized', statusCode: 401}, HttpStatus.UNAUTHORIZED);
+    }
+    return {id: jadwalPeriksa.id};
   }
 
 }

@@ -37,7 +37,7 @@ export class PasienController {
   async register(@Body() registerPasienDto: RegisterPasienDto) {
     const pasien = await this.pasienService.register(registerPasienDto);
     if (pasien) {
-      return {message: 'pasien berhasil ditambahkan', data: [{id:pasien.id, nama:pasien.nama}]};
+      return {message: 'pasien berhasil ditambahkan', data: {id:pasien.id, nama:pasien.nama}};
     }
     throw new HttpException({message: ['no_ktp sudah terdaftar'], error: 'Bad Request', statusCode: 400}, HttpStatus.BAD_REQUEST);
   }

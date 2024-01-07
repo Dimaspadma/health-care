@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Dokter } from "./dokter.entity";
 import { Pasien } from "./pasien.entity";
 import { Poli } from "./poli.entity";
+import { Periksa } from "./periksa.entity";
 
 @Entity()
 export class JadwalPeriksa {
@@ -51,4 +52,7 @@ export class JadwalPeriksa {
   @ManyToOne(() => Poli)
   @JoinColumn({ name: 'id_poli' })
   poli: Poli;
+
+  @OneToMany(() => Periksa, periksa => periksa.jadwalPeriksa)
+  periksa: Periksa[];
 } 

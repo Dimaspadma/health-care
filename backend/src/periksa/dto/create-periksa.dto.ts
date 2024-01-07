@@ -1,4 +1,4 @@
-import { IsDate, IsInt, IsNotEmpty, IsString } from "class-validator";
+import { IsDate, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreatePeriksaDto {
     @IsNotEmpty()
@@ -12,6 +12,8 @@ export class CreatePeriksaDto {
     @IsNotEmpty()
     tgl_periksa: Date;
 
+    @IsOptional()
+    @IsString()
     keluhan: string;
 
     no_antrian: number;

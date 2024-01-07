@@ -18,6 +18,7 @@ export class Poli {
   @Column({
     type: 'text',
     name: 'keterangan',
+    nullable: true,
   })
   keterangan: string;
 }

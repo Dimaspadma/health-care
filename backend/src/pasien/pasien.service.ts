@@ -20,7 +20,7 @@ export class PasienService {
     return await this.pasienRepository.findOneBy({ id: idPasien });
   }
 
-  async register(registerPasienDto: RegisterPasienDto) {
+  async register(registerPasienDto: RegisterPasienDto): Promise<Pasien> {
     // Check if pasien already exists by no_ktp
     const pasien = await this.pasienRepository.findOneBy({
       no_ktp: registerPasienDto.no_ktp,
